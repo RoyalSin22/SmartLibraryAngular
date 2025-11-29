@@ -1,0 +1,52 @@
+<header class="navbar">
+  <a routerLink="/home" class="logo-link">
+    <h1 class="logo"><i class="fas fa-book-reader"></i> SmartLibrary</h1>
+  </a>
+
+  <nav class="nav-menu" [ngClass]="{'open': menuOpen}">
+    <a routerLink="/home" class="nav-item" [class.active]="isActive('/home')">
+      <i class="fas fa-home"></i> <span>Inicio</span>
+    </a>
+    <a routerLink="/catalogo" class="nav-item" [class.active]="isActive('/catalogo')">
+      <i class="fas fa-book-open"></i> <span>Catálogo</span>
+    </a>
+    <a routerLink="/prestamos" class="nav-item" [class.active]="isActive('/prestamos')" *ngIf="currentUser">
+      <i class="fas fa-hand-holding"></i> <span>Préstamos</span>
+    </a>
+    <a routerLink="/servicios" class="nav-item" [class.active]="isActive('/servicios')">
+      <i class="fas fa-concierge-bell"></i> <span>Servicios</span>
+    </a>
+    <a routerLink="/perfil" class="nav-item" [class.active]="isActive('/perfil')" *ngIf="currentUser">
+      <i class="fas fa-user-circle"></i> <span>Mi Perfil</span>
+    </a>
+    <a routerLink="/chatbot" class="nav-item" [class.active]="isActive('/chatbot')">
+      <i class="fas fa-robot"></i> <span>ChatBot</span>
+    </a>
+    <a routerLink="/qr-scanner" class="nav-item" [class.active]="isActive('/qr-scanner')" *ngIf="currentUser">
+      <i class="fas fa-qrcode"></i> <span>QR</span>
+    </a>
+
+    <!-- Separador -->
+    <div class="nav-spacer"></div>
+
+    <!-- Usuario logueado -->
+    <div class="user-section" *ngIf="currentUser">
+      <span class="user-greeting">
+        <i class="fas fa-user"></i> {{ currentUser.nombre }}
+      </span>
+      <button class="btn-logout" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i> <span>Salir</span>
+      </button>
+    </div>
+
+    <!-- Usuario no logueado -->
+    <a routerLink="/login" class="nav-item btn-login" *ngIf="!currentUser">
+      <i class="fas fa-sign-in-alt"></i> <span>Iniciar Sesión</span>
+    </a>
+  </nav>
+
+  <!-- Menú hamburguesa para móvil -->
+  <button class="menu-toggle" (click)="toggleMenu()">
+    <i class="fas" [ngClass]="menuOpen ? 'fa-times' : 'fa-bars'"></i>
+  </button>
+</header>

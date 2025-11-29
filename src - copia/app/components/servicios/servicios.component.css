@@ -1,0 +1,211 @@
+/* Variables de Color (Tomadas de la paleta SmartLibrary) */
+:root {
+    --primary-blue: #1976d2; /* Azul principal */
+    --secondary-blue: #1565c0; /* Azul más oscuro (hover, acciones) */
+    --background-light: #f5f7fa; /* Fondo claro */
+    --text-dark: #222;
+    --text-light: #fff;
+    --card-bg: #fff;
+    --border-color: #e0e0e0;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos Globales y Tipografía */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--background-light) 0%, #c3cfe2 100%);
+    color: var(--text-dark);
+    min-height: 100vh;
+}
+
+/* --- Barra de Navegación (Header) --- */
+.navbar {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+    color: var(--text-light);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 2.5rem;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-item {
+    color: var(--text-light);
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    opacity: 0.9;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    font-size: 1em;
+}
+
+.nav-item i {
+    margin-right: 6px;
+}
+
+.nav-item:hover, .nav-item.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    opacity: 1;
+}
+
+/* --- Contenedor Principal de Servicios --- */
+.services-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.page-title {
+    font-size: 2.5em;
+    color: var(--primary-blue);
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+.page-title i { margin-right: 12px; }
+
+.page-subtitle {
+    font-size: 1.1em;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+/* --- Rejilla de Servicios --- */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas para PC */
+    gap: 30px;
+}
+
+.service-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 6px 15px var(--shadow-color);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    height: 100%;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.icon-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    color: var(--text-light);
+    margin-bottom: 20px;
+}
+
+.icon-circle.primary {
+    background: linear-gradient(45deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+    box-shadow: 0 4px 10px rgba(25, 118, 210, 0.4);
+}
+
+.icon-circle.secondary {
+    background: linear-gradient(45deg, #00bcd4 0%, #00acc1 100%); /* Un azul cian para contraste */
+    box-shadow: 0 4px 10px rgba(0, 188, 212, 0.4);
+}
+
+.service-card h3 {
+    font-size: 1.5em;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.service-card p {
+    font-size: 1em;
+    color: #555;
+    flex-grow: 1; /* Permite que los párrafos tengan alturas uniformes */
+    margin-bottom: 20px;
+}
+
+.btn-card-action {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 200px;
+    margin-top: auto; /* Se adhiere a la parte inferior de la tarjeta */
+
+    /* Estilo por defecto */
+    background-color: #f1f1f1;
+    color: var(--primary-blue);
+    border: 1px solid var(--primary-blue);
+}
+
+.btn-card-action:hover {
+    background-color: #e6e6e6;
+}
+
+.btn-card-action.primary-btn {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+    color: var(--text-light);
+    border: none;
+    box-shadow: 0 4px 10px rgba(25, 118, 210, 0.3);
+}
+
+.btn-card-action.primary-btn:hover {
+    box-shadow: 0 6px 15px rgba(25, 118, 210, 0.4);
+    transform: translateY(-1px);
+}
+
+/* --- Media Queries (Responsividad) --- */
+@media (max-width: 1024px) {
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columnas para tablets */
+        gap: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px 20px;
+    }
+    .services-grid {
+        grid-template-columns: 1fr; /* 1 columna para móviles */
+        gap: 20px;
+    }
+    .service-card {
+        padding: 25px;
+    }
+    .btn-card-action {
+        max-width: 100%;
+    }
+}

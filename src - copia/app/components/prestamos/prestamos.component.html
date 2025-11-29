@@ -1,0 +1,224 @@
+
+<main class="prestamos-container">
+
+  <!-- Header con estadísticas -->
+  <div class="prestamos-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="fas fa-hand-holding-heart"></i>
+        Mis Préstamos
+      </h1>
+      <p class="page-subtitle">Gestiona tus libros prestados y renovaciones</p>
+    </div>
+
+    <div class="stats-cards">
+      <div class="stat-card total">
+        <div class="stat-card-icon">
+          <i class="fas fa-books"></i>
+        </div>
+        <div class="stat-card-info">
+          <span class="stat-card-number">{{ totalLibros }}</span>
+          <span class="stat-card-label">Total Libros</span>
+        </div>
+      </div>
+
+      <div class="stat-card danger">
+        <div class="stat-card-icon">
+          <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <div class="stat-card-info">
+          <span class="stat-card-number">{{ librosVencidos }}</span>
+          <span class="stat-card-label">Vencidos</span>
+        </div>
+      </div>
+
+      <div class="stat-card warning">
+        <div class="stat-card-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-card-info">
+          <span class="stat-card-number">{{ proximosVencer }}</span>
+          <span class="stat-card-label">Por Vencer</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <section class="prestamos-content">
+
+    <!-- Tabla para desktop -->
+    <div class="table-container desktop-only">
+      <table class="prestamos-table">
+        <thead>
+          <tr>
+            <th class="th-book">Libro</th>
+            <th class="th-status">Estado</th>
+            <th class="th-date">Vencimiento</th>
+            <th class="th-remaining">Días</th>
+            <th class="th-actions">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let prestamo of prestamosActivos"
+              class="table-row"
+              [ngClass]="getEstadoClase(prestamo)">
+            <td class="td-book">
+              <div class="book-cell">
+                <img [src]="prestamo.libro?.portada || 'assets/images/paco_yunque.png'"
+                     [alt]="prestamo.libro?.titulo"
+                     class="book-thumb"
+                     (click)="verDetalleLibro(prestamo.libroId)">
+                <div class="book-details">
+                  <h4 class="book-title" (click)="verDetalleLibro(prestamo.libroId)">
+                    {{ prestamo.libro?.titulo || 'Título no disponible' }}
+                  </h4>
+                  <p class="book-author">{{ prestamo.libro?.autor || 'Autor desconocido' }}</p>
+                  <span class="book-category">{{ prestamo.libro?.categoria }}</span>
+                </div>
+              </div>
+            </td>
+            <td class="td-status">
+              <span class="status-badge" [ngClass]="getEstadoTagClase(prestamo)">
+                <i class="fas" [ngClass]="{
+                  'fa-check-circle': getEstadoPrestamo(prestamo) === 'activo',
+                  'fa-exclamation-triangle': getEstadoPrestamo(prestamo) === 'proximo-vencer',
+                  'fa-times-circle': getEstadoPrestamo(prestamo) === 'vencido'
+                }"></i>
+                {{ getEstadoTexto(prestamo) }}
+              </span>
+            </td>
+            <td class="td-date">
+              <div class="date-info">
+                <span class="date-main">{{ formatearFecha(prestamo.fechaDevolucion) }}</span>
+                <span class="date-sub">Préstamo: {{ formatearFecha(prestamo.fechaPrestamo) }}</span>
+              </div>
+            </td>
+            <td class="td-remaining">
+              <span class="days-badge" [ngClass]="{
+                'days-ok': getDiasRestantes(prestamo.fechaDevolucion) > 3,
+                'days-warning': getDiasRestantes(prestamo.fechaDevolucion) <= 3 && getDiasRestantes(prestamo.fechaDevolucion) > 0,
+                'days-danger': getDiasRestantes(prestamo.fechaDevolucion) <= 0
+              }">
+                <ng-container *ngIf="getDiasRestantes(prestamo.fechaDevolucion) > 0">
+                  {{ getDiasRestantes(prestamo.fechaDevolucion) }} días
+                </ng-container>
+                <ng-container *ngIf="getDiasRestantes(prestamo.fechaDevolucion) === 0">
+                  Hoy
+                </ng-container>
+                <ng-container *ngIf="getDiasRestantes(prestamo.fechaDevolucion) < 0">
+                  {{ getDiasRestantes(prestamo.fechaDevolucion) * -1 }} días atraso
+                </ng-container>
+              </span>
+            </td>
+            <td class="td-actions">
+              <div class="action-buttons">
+                <button class="btn-action btn-renew"
+                        [disabled]="prestamo.renovaciones >= prestamo.maxRenovaciones"
+                        (click)="renovarPrestamo(prestamo)"
+                        [title]="prestamo.renovaciones >= prestamo.maxRenovaciones ? 'Máximo de renovaciones alcanzado' : 'Renovar préstamo'">
+                  <i class="fas fa-redo"></i>
+                  <span>Renovar</span>
+                </button>
+                <span class="renovations-count">
+                  {{ prestamo.renovaciones }}/{{ prestamo.maxRenovaciones }}
+                </span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tarjetas para móvil -->
+    <div class="cards-container mobile-only">
+      <div *ngFor="let prestamo of prestamosActivos"
+           class="prestamo-card"
+           [ngClass]="getEstadoClase(prestamo)">
+
+        <div class="card-header">
+          <span class="status-badge" [ngClass]="getEstadoTagClase(prestamo)">
+            <i class="fas" [ngClass]="{
+              'fa-check-circle': getEstadoPrestamo(prestamo) === 'activo',
+              'fa-exclamation-triangle': getEstadoPrestamo(prestamo) === 'proximo-vencer',
+              'fa-times-circle': getEstadoPrestamo(prestamo) === 'vencido'
+            }"></i>
+            {{ getEstadoTexto(prestamo) }}
+          </span>
+          <span class="days-badge" [ngClass]="{
+            'days-ok': getDiasRestantes(prestamo.fechaDevolucion) > 3,
+            'days-warning': getDiasRestantes(prestamo.fechaDevolucion) <= 3 && getDiasRestantes(prestamo.fechaDevolucion) > 0,
+            'days-danger': getDiasRestantes(prestamo.fechaDevolucion) <= 0
+          }">
+            <ng-container *ngIf="getDiasRestantes(prestamo.fechaDevolucion) > 0">
+              {{ getDiasRestantes(prestamo.fechaDevolucion) }} días
+            </ng-container>
+            <ng-container *ngIf="getDiasRestantes(prestamo.fechaDevolucion) === 0">
+              Hoy
+            </ng-container>
+            <ng-container *ngIf="getDiasRestantes(prestamo.fechaDevolucion) < 0">
+              {{ getDiasRestantes(prestamo.fechaDevolucion) * -1 }}d atraso
+            </ng-container>
+          </span>
+        </div>
+
+        <div class="card-body">
+          <img [src]="prestamo.libro?.portada || 'assets/images/paco_yunque.png'"
+               [alt]="prestamo.libro?.titulo"
+               class="card-cover"
+               (click)="verDetalleLibro(prestamo.libroId)">
+
+          <div class="card-info">
+            <h4 class="card-title" (click)="verDetalleLibro(prestamo.libroId)">
+              {{ prestamo.libro?.titulo || 'Título no disponible' }}
+            </h4>
+            <p class="card-author">{{ prestamo.libro?.autor || 'Autor desconocido' }}</p>
+
+            <div class="card-dates">
+              <div class="date-row">
+                <i class="fas fa-calendar-plus"></i>
+                <span>Préstamo: {{ formatearFecha(prestamo.fechaPrestamo) }}</span>
+              </div>
+              <div class="date-row">
+                <i class="fas fa-calendar-times"></i>
+                <span>Vence: {{ formatearFecha(prestamo.fechaDevolucion) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button class="btn-action btn-renew"
+                  [disabled]="prestamo.renovaciones >= prestamo.maxRenovaciones"
+                  (click)="renovarPrestamo(prestamo)">
+            <i class="fas fa-redo"></i>
+            <span>Renovar ({{ prestamo.renovaciones }}/{{ prestamo.maxRenovaciones }})</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sin préstamos -->
+    <div *ngIf="prestamosActivos.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-book-open"></i>
+      </div>
+      <h3>No tienes préstamos activos</h3>
+      <p>Explora nuestro catálogo y encuentra tu próxima lectura</p>
+      <a routerLink="/catalogo" class="btn-primary">
+        <i class="fas fa-search"></i>
+        Explorar Catálogo
+      </a>
+    </div>
+  </section>
+
+  <!-- Información adicional -->
+  <div class="info-banner" *ngIf="prestamosActivos.length > 0">
+    <i class="fas fa-info-circle"></i>
+    <div class="info-content">
+      <strong>Información sobre renovaciones:</strong>
+      <p>Puedes renovar cada libro hasta 2 veces. Las renovaciones extienden el préstamo por 7 días adicionales.</p>
+    </div>
+  </div>
+
+</main>

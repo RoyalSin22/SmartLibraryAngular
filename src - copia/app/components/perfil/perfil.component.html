@@ -1,0 +1,360 @@
+
+<main class="perfil-container" *ngIf="currentUser">
+
+  <!-- Header del Perfil -->
+  <div class="perfil-header">
+    <div class="header-background"></div>
+    <div class="header-content">
+      <div class="avatar-section">
+        <div class="avatar-wrapper">
+          <img src="assets/images/paco_yunque.png" alt="Avatar" class="avatar-img">
+          <button class="avatar-edit-btn" title="Cambiar foto">
+            <i class="fas fa-camera"></i>
+          </button>
+        </div>
+        <div class="user-main-info">
+          <h1 class="user-fullname">{{ currentUser.nombre }} {{ currentUser.apellido }}</h1>
+          <div class="user-badges">
+            <span class="badge badge-type">
+              <i class="fas" [ngClass]="getTipoUsuarioIcon()"></i>
+              {{ currentUser.tipo | titlecase }}
+            </span>
+            <span class="badge badge-status">
+              <i class="fas fa-check-circle"></i>
+              Activo
+            </span>
+            <span class="badge badge-id">
+              <i class="fas fa-id-card"></i>
+              ID: {{ currentUser.id }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn-header" (click)="abrirModalEditar()">
+          <i class="fas fa-edit"></i>
+          <span>Editar Perfil</span>
+        </button>
+        <button class="btn-header btn-qr" (click)="abrirModalQR()">
+          <i class="fas fa-qrcode"></i>
+          <span>Mi QR</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido Principal -->
+  <div class="perfil-content">
+
+    <!-- Columna Izquierda -->
+    <div class="content-left">
+
+      <!-- Información Personal -->
+      <div class="card info-card">
+        <div class="card-header">
+          <i class="fas fa-user"></i>
+          <h3>Información Personal</h3>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-id-card"></i>
+              </div>
+              <div class="info-content">
+                <span class="info-label">DNI</span>
+                <span class="info-value">{{ currentUser.dni }}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div class="info-content">
+                <span class="info-label">Correo Electrónico</span>
+                <span class="info-value">{{ currentUser.email }}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-phone"></i>
+              </div>
+              <div class="info-content">
+                <span class="info-label">Teléfono</span>
+                <span class="info-value">{{ currentUser.telefono || 'No registrado' }}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div class="info-content">
+                <span class="info-label">Dirección</span>
+                <span class="info-value">{{ currentUser.direccion || 'No registrada' }}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+              <div class="info-content">
+                <span class="info-label">Miembro desde</span>
+                <span class="info-value">{{ getAnioRegistro() }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Configuración de Cuenta -->
+      <div class="card settings-card">
+        <div class="card-header">
+          <i class="fas fa-cog"></i>
+          <h3>Configuración</h3>
+        </div>
+        <div class="card-body">
+          <div class="settings-list">
+            <div class="setting-item" (click)="abrirModalPassword()">
+              <div class="setting-info">
+                <i class="fas fa-lock"></i>
+                <div>
+                  <span class="setting-title">Cambiar Contraseña</span>
+                  <span class="setting-desc">Actualiza tu contraseña de acceso</span>
+                </div>
+              </div>
+              <i class="fas fa-chevron-right"></i>
+            </div>
+
+            <div class="setting-item">
+              <div class="setting-info">
+                <i class="fas fa-bell"></i>
+                <div>
+                  <span class="setting-title">Notificaciones</span>
+                  <span class="setting-desc">Configura alertas de vencimiento</span>
+                </div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-item">
+              <div class="setting-info">
+                <i class="fas fa-envelope-open-text"></i>
+                <div>
+                  <span class="setting-title">Boletín Informativo</span>
+                  <span class="setting-desc">Recibe novedades de la biblioteca</span>
+                </div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-item danger" (click)="cerrarSesion()">
+              <div class="setting-info">
+                <i class="fas fa-sign-out-alt"></i>
+                <div>
+                  <span class="setting-title">Cerrar Sesión</span>
+                  <span class="setting-desc">Salir de tu cuenta</span>
+                </div>
+              </div>
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna Derecha -->
+    <div class="content-right">
+
+      <!-- Estadísticas -->
+      <div class="card stats-card">
+        <div class="card-header">
+          <i class="fas fa-chart-bar"></i>
+          <h3>Mi Actividad</h3>
+        </div>
+        <div class="card-body">
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-icon blue">
+                <i class="fas fa-book-reader"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-number">{{ totalLeidos }}</span>
+                <span class="stat-label">Libros Leídos</span>
+              </div>
+            </div>
+
+            <div class="stat-box">
+              <div class="stat-icon green">
+                <i class="fas fa-hand-holding"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-number">{{ prestamosActivos }}</span>
+                <span class="stat-label">Préstamos Activos</span>
+              </div>
+            </div>
+
+            <div class="stat-box">
+              <div class="stat-icon orange">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-number">{{ diasMulta }}</span>
+                <span class="stat-label">Días de Multa</span>
+              </div>
+            </div>
+
+            <div class="stat-box">
+              <div class="stat-icon purple">
+                <i class="fas fa-star"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-number">4.8</span>
+                <span class="stat-label">Valoración</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Código QR Rápido -->
+      <div class="card qr-card">
+        <div class="card-header">
+          <i class="fas fa-qrcode"></i>
+          <h3>Mi Código QR</h3>
+        </div>
+        <div class="card-body">
+          <div class="qr-preview">
+            <img [src]="qrCodeUrl" alt="Código QR" class="qr-image">
+            <p class="qr-hint">Usa este código para préstamos rápidos</p>
+          </div>
+          <div class="qr-actions">
+            <button class="btn-qr-action" (click)="abrirModalQR()">
+              <i class="fas fa-expand"></i>
+              Ampliar
+            </button>
+            <button class="btn-qr-action" (click)="descargarQR()">
+              <i class="fas fa-download"></i>
+              Descargar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accesos Rápidos -->
+      <div class="card quick-actions-card">
+        <div class="card-header">
+          <i class="fas fa-bolt"></i>
+          <h3>Accesos Rápidos</h3>
+        </div>
+        <div class="card-body">
+          <div class="quick-actions">
+            <a routerLink="/catalogo" class="quick-action">
+              <i class="fas fa-book-open"></i>
+              <span>Catálogo</span>
+            </a>
+            <a routerLink="/prestamos" class="quick-action">
+              <i class="fas fa-hand-holding"></i>
+              <span>Préstamos</span>
+            </a>
+            <a routerLink="/qr-scanner" class="quick-action">
+              <i class="fas fa-qrcode"></i>
+              <span>Escanear QR</span>
+            </a>
+            <a routerLink="/chatbot" class="quick-action">
+              <i class="fas fa-robot"></i>
+              <span>Asistente</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Modal Editar Perfil -->
+<div class="modal-overlay" *ngIf="mostrarModalEditar" (click)="cerrarModalEditar()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="fas fa-edit"></i> Editar Información</h3>
+      <button class="modal-close" (click)="cerrarModalEditar()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Nombre</label>
+        <input type="text" [(ngModel)]="datosEditados.nombre" placeholder="Tu nombre">
+      </div>
+      <div class="form-group">
+        <label>Apellido</label>
+        <input type="text" [(ngModel)]="datosEditados.apellido" placeholder="Tu apellido">
+      </div>
+      <div class="form-group">
+        <label>Correo Electrónico</label>
+        <input type="email" [(ngModel)]="datosEditados.email" placeholder="correo@ejemplo.com">
+      </div>
+      <div class="form-group">
+        <label>Teléfono</label>
+        <input type="tel" [(ngModel)]="datosEditados.telefono" placeholder="999 999 999">
+      </div>
+      <div class="form-group">
+        <label>Dirección</label>
+        <input type="text" [(ngModel)]="datosEditados.direccion" placeholder="Tu dirección">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="cerrarModalEditar()">Cancelar</button>
+      <button class="btn-save" (click)="guardarCambios()">
+        <i class="fas fa-save"></i> Guardar Cambios
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal QR Ampliado -->
+<div class="modal-overlay" *ngIf="mostrarModalQR" (click)="cerrarModalQR()">
+  <div class="modal-content modal-qr" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="fas fa-qrcode"></i> Mi Código QR</h3>
+      <button class="modal-close" (click)="cerrarModalQR()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body qr-modal-body">
+      <div class="qr-large">
+        <img [src]="qrCodeUrl" alt="Código QR">
+      </div>
+      <div class="qr-user-info">
+        <h4>{{ currentUser?.nombre }} {{ currentUser?.apellido }}</h4>
+        <p>ID: {{ currentUser?.id }}</p>
+        <p>DNI: {{ currentUser?.dni }}</p>
+        <span class="qr-type">{{ currentUser?.tipo | titlecase }}</span>
+      </div>
+      <p class="qr-instructions">
+        Presenta este código en el mostrador de la biblioteca para realizar préstamos rápidos sin necesidad de tu carnet físico.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-save" (click)="descargarQR()">
+        <i class="fas fa-download"></i> Descargar QR
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading -->
+<div *ngIf="!currentUser" class="loading-container">
+  <div class="loading-spinner"></div>
+  <p>Cargando perfil...</p>
+</div>

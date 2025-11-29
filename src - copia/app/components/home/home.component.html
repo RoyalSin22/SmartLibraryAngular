@@ -1,0 +1,230 @@
+
+<main class="home-container">
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Bienvenido a <span class="highlight">SmartLibrary</span>
+      </h1>
+      <p class="hero-subtitle">
+        Tu biblioteca digital inteligente. Explora miles de libros, gestiona tus préstamos y descubre nuevas lecturas.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary-hero" (click)="explorarCatalogo()">
+          <i class="fas fa-book-open"></i> Explorar Catálogo
+        </button>
+        <a *ngIf="!currentUser" routerLink="/login" class="btn-secondary-hero">
+          <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+        </a>
+      </div>
+    </div>
+    <div class="hero-illustration">
+      <div class="floating-books">
+        <div class="floating-book book-1"></div>
+        <div class="floating-book book-2"></div>
+        <div class="floating-book book-3"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Estadísticas -->
+  <section class="stats-section">
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-icon-wrapper blue">
+          <i class="fas fa-book"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number">{{ totalLibros }}</span>
+          <span class="stat-label">Libros Disponibles</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon-wrapper green">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number">{{ totalUsuarios }}</span>
+          <span class="stat-label">Usuarios Registrados</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon-wrapper orange">
+          <i class="fas fa-hand-holding"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number">{{ prestamosActivos }}</span>
+          <span class="stat-label">Préstamos Activos</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Libros Destacados -->
+  <section class="featured-section">
+    <div class="section-header">
+      <h2 class="section-title">
+        <i class="fas fa-star"></i> Libros Destacados
+      </h2>
+      <a routerLink="/catalogo" class="view-all-link">
+        Ver todos <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="books-grid">
+      <div *ngFor="let libro of librosDestacados"
+           class="book-card"
+           (click)="verLibro(libro.id)">
+        <div class="book-cover-wrapper">
+          <img [src]="libro.portada || 'assets/images/paco_yunque.png'"
+               [alt]="libro.titulo"
+               class="book-cover">
+          <div class="book-overlay">
+            <button class="btn-view">
+              <i class="fas fa-eye"></i> Ver detalles
+            </button>
+          </div>
+          <span class="availability-badge"
+                [ngClass]="libro.disponible ? 'available' : 'unavailable'">
+            {{ libro.disponible ? 'Disponible' : 'Prestado' }}
+          </span>
+        </div>
+        <div class="book-info">
+          <h4 class="book-title">{{ libro.titulo }}</h4>
+          <p class="book-author">{{ libro.autor }}</p>
+          <div class="book-rating">
+            <div class="stars">
+              <i *ngFor="let star of getStars(libro.rating)"
+                 class="fas fa-star"
+                 [ngClass]="{'star-filled': star === 'full', 'star-half': star === 'half', 'star-empty': star === 'empty'}">
+              </i>
+            </div>
+            <span class="rating-text">{{ libro.rating?.toFixed(1) || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categorías -->
+  <section class="categories-section">
+    <h2 class="section-title centered">
+      <i class="fas fa-th-large"></i> Explora por Categoría
+    </h2>
+
+    <div class="categories-grid">
+      <div *ngFor="let cat of categorias"
+           class="category-card"
+           (click)="verCategoria(cat.nombre)">
+        <div class="category-icon" [style.background]="cat.color">
+          <i [class]="cat.icono"></i>
+        </div>
+        <span class="category-name">{{ cat.nombre }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Noticias y Novedades -->
+  <section class="news-section">
+    <h2 class="section-title">
+      <i class="fas fa-newspaper"></i> Noticias y Novedades
+    </h2>
+
+    <div class="news-grid">
+      <article *ngFor="let noticia of noticias"
+               class="news-card"
+               [ngClass]="{'featured': noticia.destacado}">
+        <div class="news-image">
+          <div class="news-image-placeholder" [ngClass]="{
+            'placeholder-1': noticia.id === 1,
+            'placeholder-2': noticia.id === 2,
+            'placeholder-3': noticia.id === 3
+          }">
+            <i class="fas" [ngClass]="{
+              'fa-book-open': noticia.id === 1,
+              'fa-clock': noticia.id === 2,
+              'fa-pen-fancy': noticia.id === 3
+            }"></i>
+          </div>
+          <span *ngIf="noticia.destacado" class="featured-badge">
+            <i class="fas fa-fire"></i> Destacado
+          </span>
+        </div>
+        <div class="news-content">
+          <span class="news-date">
+            <i class="fas fa-calendar-alt"></i> {{ formatDate(noticia.fecha) }}
+          </span>
+          <h3 class="news-title">{{ noticia.titulo }}</h3>
+          <p class="news-summary">{{ noticia.resumen }}</p>
+          <a class="news-link">Leer más <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Call to Action (solo para usuarios no logueados) -->
+  <section *ngIf="!currentUser" class="cta-section">
+    <div class="cta-content">
+      <div class="cta-icon">
+        <i class="fas fa-user-plus"></i>
+      </div>
+      <h2 class="cta-title">¿Aún no tienes cuenta?</h2>
+      <p class="cta-text">
+        Regístrate gratis y accede a todos los servicios de SmartLibrary.
+        Préstamos en línea, reservas, historial de lecturas y mucho más.
+      </p>
+      <div class="cta-actions">
+        <a routerLink="/login" class="btn-cta-primary">
+          <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="home-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3><i class="fas fa-book-reader"></i> SmartLibrary</h3>
+        <p>Tu biblioteca digital inteligente para gestionar tus lecturas de forma eficiente.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <h4>Enlaces Rápidos</h4>
+        <a routerLink="/catalogo"><i class="fas fa-chevron-right"></i> Catálogo</a>
+        <a routerLink="/servicios"><i class="fas fa-chevron-right"></i> Servicios</a>
+        <a routerLink="/prestamos"><i class="fas fa-chevron-right"></i> Mis Préstamos</a>
+        <a routerLink="/perfil"><i class="fas fa-chevron-right"></i> Mi Perfil</a>
+      </div>
+
+      <div class="footer-contact">
+        <h4>Contacto</h4>
+        <p><i class="fas fa-map-marker-alt"></i> Av. Universidad 123, Lima</p>
+        <p><i class="fas fa-phone"></i> +51 123 456 789</p>
+        <p><i class="fas fa-envelope"></i> info&#64;smartlibrary.com</p>
+        <p><i class="fas fa-clock"></i> Lun - Vie: 8:00 - 20:00</p>
+      </div>
+
+      <div class="footer-newsletter">
+        <h4>Boletín Informativo</h4>
+        <p>Suscríbete para recibir novedades</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Tu correo electrónico">
+          <button><i class="fas fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 SmartLibrary. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+</main>

@@ -1,0 +1,109 @@
+<main class="chatbot-container">
+  <div class="chat-wrapper">
+
+    <!-- Header -->
+    <header class="chat-header">
+      <div class="header-content">
+        <div class="bot-avatar">
+          <i class="fas fa-robot"></i>
+        </div>
+        <div class="header-info">
+          <h2>BiblioBot</h2>
+          <p class="status">
+            <span class="status-dot"></span>
+            En línea
+          </p>
+        </div>
+      </div>
+      <button class="clear-btn" (click)="clearChat()" title="Limpiar chat">
+        <i class="fas fa-trash-alt"></i>
+      </button>
+    </header>
+
+    <!-- Messages -->
+    <div class="messages-list" #messagesContainer>
+      <div
+        *ngFor="let message of messages; let i = index"
+        class="message-wrapper"
+        [ngClass]="message.role"
+      >
+        <div class="message">
+          <div class="message-avatar" *ngIf="message.role === 'assistant'">
+            <i class="fas fa-robot"></i>
+          </div>
+
+          <div class="message-bubble">
+            <p [innerHTML]="message.content | nl2br"></p>
+            <span class="message-time">
+              {{ message.timestamp | date:'shortTime' }}
+            </span>
+          </div>
+
+          <div class="message-avatar user-avatar" *ngIf="message.role === 'user'">
+            <i class="fas fa-user"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading indicator -->
+      <div class="message-wrapper assistant" *ngIf="isLoading">
+        <div class="message">
+          <div class="message-avatar">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div class="message-bubble typing">
+            <div class="typing-indicator">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick suggestions -->
+    <div class="sugerencias-container" *ngIf="messages.length === 1 && !isLoading">
+      <p class="sugerencias-title">
+        <i class="fas fa-lightbulb"></i>
+        Preguntas sugeridas:
+      </p>
+      <div class="sugerencias-grid">
+        <button
+          *ngFor="let sugerencia of sugerencias"
+          class="sugerencia-btn"
+          (click)="useSugerencia(sugerencia)"
+        >
+          <i class="fas fa-comment-dots"></i>
+          {{ sugerencia }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Input area -->
+    <div class="input-area">
+      <div class="input-wrapper">
+        <input
+          type="text"
+          [(ngModel)]="input"
+          (keypress)="onKeyPress($event)"
+          placeholder="Escribe tu pregunta..."
+          class="chat-input"
+          [disabled]="isLoading"
+          maxlength="500"
+        >
+        <button
+          class="send-btn"
+          (click)="sendMessage()"
+          [disabled]="isLoading || !input.trim()"
+          [class.active]="input.trim()"
+        >
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+      <p class="input-hint" *ngIf="input.length > 400">
+        {{ 500 - input.length }} caracteres restantes
+      </p>
+    </div>
+  </div>
+</main>

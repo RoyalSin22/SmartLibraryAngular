@@ -1,0 +1,44 @@
+<div class="header">
+  <h1>SmartLibrary</h1>
+</div>
+
+<div class="container">
+  <div class="login-card">
+    <h2 class="login-title">Inicie Sesión</h2>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="input-group">
+        <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <input
+          type="text"
+          class="input-field"
+          placeholder="Ingrese DNI o ID de Biblioteca"
+          formControlName="dni"
+        >
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="btn-login" [disabled]="!loginForm.valid">
+        Ingrese
+      </button>
+    </form>
+
+    <div class="register-link">
+      <span>¿Bibliotecario?</span>
+      <a href="#" (click)="onRegisterClick(); $event.preventDefault()">Ingresar aquí</a>
+    </div>
+
+    <div class="demo-info">
+      <p><strong>Demo DNIs:</strong></p>
+      <p>Estudiante: 12345678</p>
+      <p>Bibliotecario: 87654321</p>
+      <p>Profesor: 11223344</p>
+    </div>
+  </div>
+</div>
