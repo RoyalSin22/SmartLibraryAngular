@@ -1,0 +1,634 @@
+.qr-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.qr-card {
+  background: white;
+  border-radius: 20px;
+  padding: 50px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+.qr-title {
+  color: #1976d2;
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-weight: 700;
+}
+
+.qr-title i {
+  font-size: 2.3rem;
+}
+
+.qr-subtitle {
+  color: #666;
+  font-size: 1.15rem;
+  margin-bottom: 50px;
+  line-height: 1.6;
+}
+
+.qr-content-wrapper {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 50px;
+}
+
+.qr-scanner-area h3,
+.qr-options-area h3 {
+  color: #1976d2;
+  font-size: 1.5rem;
+  margin-bottom: 25px;
+  font-weight: 600;
+  border-bottom: 3px solid #e3f2fd;
+  padding-bottom: 15px;
+}
+
+.qr-frame-box {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 10%);
+  border: 3px dashed #1976d2;
+  border-radius: 16px;
+  padding: 60px 40px;
+  text-align: center;
+  margin-bottom: 30px;
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.qr-placeholder i {
+  font-size: 6rem;
+  color: #1976d2;
+  margin-bottom: 25px;
+  opacity: 0.7;
+}
+
+.qr-placeholder p {
+  color: #666;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.focus-text {
+  color: #1976d2;
+  font-weight: 600;
+  margin-top: 20px;
+  font-size: 1.05rem;
+}
+
+.btn-action {
+  width: 100%;
+  padding: 18px;
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+}
+
+.btn-action:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(25, 118, 210, 0.4);
+}
+
+.options-group {
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.options-group:last-child {
+  border-bottom: none;
+}
+
+.btn-option {
+  width: 100%;
+  padding: 15px 20px;
+  background: white;
+  border: 2px solid #1976d2;
+  color: #1976d2;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.btn-option:hover {
+  background: #1976d2;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+}
+
+.btn-option i {
+  font-size: 1.3rem;
+}
+
+.option-description {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+  padding-left: 15px;
+}
+
+/* Modales */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+.modal-content.large {
+  max-width: 800px;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #f44336;
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.modal-close:hover {
+  transform: rotate(90deg);
+  background: #d32f2f;
+}
+
+.modal-content h3 {
+  color: #1976d2;
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+}
+
+.qr-display {
+  margin: 30px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.qr-code-placeholder {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  padding: 50px;
+  border-radius: 16px;
+  text-align: center;
+  border: 3px dashed #1976d2;
+}
+
+.qr-icon-large {
+  font-size: 8rem;
+  color: #1976d2;
+  margin-bottom: 20px;
+}
+
+.qr-data-text {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  color: #1565c0;
+  font-weight: 700;
+  margin: 15px 0;
+  word-break: break-all;
+}
+
+.qr-user-info {
+  color: #666;
+  font-size: 1rem;
+  margin-top: 20px;
+  line-height: 1.6;
+}
+
+.info-box {
+  background: #e3f2fd;
+  padding: 15px 20px;
+  border-radius: 10px;
+  border-left: 5px solid #1976d2;
+  margin-top: 20px;
+}
+
+.info-box.success {
+  background: #e8f5e9;
+  border-left-color: #4caf50;
+}
+
+.info-box i {
+  color: #1976d2;
+  font-size: 1.2rem;
+  margin-right: 10px;
+}
+
+.info-box.success i {
+  color: #4caf50;
+}
+
+.info-box p {
+  margin: 5px 0;
+  color: #1565c0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.info-box.success p {
+  color: #2e7d32;
+}
+
+/* Devolución Manual */
+.devolucion-section {
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.devolucion-section:last-child {
+  border-bottom: none;
+}
+
+.devolucion-section h4 {
+  color: #1976d2;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.isbn-search {
+  display: flex;
+  gap: 10px;
+}
+
+.isbn-input {
+  flex: 1;
+  padding: 12px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.isbn-input:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+.btn-search {
+  padding: 12px 25px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-search:hover {
+  background: #1565c0;
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+}
+
+.prestamos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.prestamo-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.prestamo-item:hover {
+  border-color: #1976d2;
+  background: #f9fafb;
+}
+
+.prestamo-item.selected {
+  border-color: #1976d2;
+  background: #e3f2fd;
+  box-shadow: 0 4px 15px rgba(25, 118, 210, 0.2);
+}
+
+.prestamo-cover {
+  width: 60px;
+  height: 85px;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.prestamo-info {
+  flex: 1;
+}
+
+.prestamo-titulo {
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 5px 0;
+  font-size: 1.05rem;
+}
+
+.prestamo-autor,
+.prestamo-isbn,
+.prestamo-fecha {
+  color: #666;
+  margin: 3px 0;
+  font-size: 0.9rem;
+}
+
+.check-icon {
+  font-size: 2rem;
+  color: #4caf50;
+}
+
+.no-prestamos {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.no-prestamos i {
+  font-size: 4rem;
+  margin-bottom: 15px;
+  color: #e0e0e0;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.btn-primary,
+.btn-secondary {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(25, 118, 210, 0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: #f5f5f5;
+  color: #666;
+  border: 2px solid #e0e0e0;
+}
+
+.btn-secondary:hover {
+  background: #e0e0e0;
+}
+
+/* Ayuda */
+.ayuda-content {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.ayuda-section h4 {
+  color: #1976d2;
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ayuda-section ol {
+  margin: 10px 0 0 20px;
+  line-height: 2;
+  color: #555;
+}
+
+.ayuda-section p {
+  color: #555;
+  line-height: 1.8;
+  margin: 8px 0;
+}
+
+/* Resultado */
+.resultado-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.resultado-mensaje {
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: 600;
+  text-align: center;
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 10px;
+}
+
+.libro-resultado {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.libro-portada-resultado {
+  width: 200px;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  margin: 0 auto;
+}
+
+.libro-datos {
+  text-align: center;
+}
+
+.libro-datos h4 {
+  color: #1976d2;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.libro-datos p {
+  margin: 8px 0;
+  color: #555;
+  font-size: 1rem;
+}
+
+.disponible {
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.no-disponible {
+  color: #f44336;
+  font-weight: 600;
+}
+
+.resultado-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+@media (max-width: 1024px) {
+  .qr-content-wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .qr-container {
+    padding: 20px;
+  }
+
+  .qr-card {
+    padding: 30px 20px;
+  }
+
+  .qr-title {
+    font-size: 1.8rem;
+  }
+
+  .qr-subtitle {
+    font-size: 1rem;
+  }
+
+  .qr-frame-box {
+    padding: 40px 20px;
+    min-height: 250px;
+  }
+
+  .qr-placeholder i {
+    font-size: 4rem;
+  }
+
+  .modal-content {
+    padding: 30px 20px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .isbn-search {
+    flex-direction: column;
+  }
+
+  .prestamos-list {
+    max-height: 300px;
+  }
+}

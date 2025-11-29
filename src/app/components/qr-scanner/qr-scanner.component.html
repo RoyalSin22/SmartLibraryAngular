@@ -1,0 +1,270 @@
+
+<main class="qr-container">
+  <div class="qr-card">
+    <h2 class="qr-title">
+      <i class="fas fa-qrcode"></i> Portal de Activación QR
+    </h2>
+    <p class="qr-subtitle">
+      Utiliza esta pantalla para escanear un código de libro o validar tu identidad.
+    </p>
+
+    <div class="qr-content-wrapper">
+      <!-- Área de escaneo -->
+      <div class="qr-scanner-area">
+        <h3>Escanea un Código QR</h3>
+        <div class="qr-frame-box">
+          <div class="qr-placeholder">
+            <i class="fas fa-camera"></i>
+            <p>Cámara no disponible en PC.<br>Usa el botón para subir una imagen.</p>
+          </div>
+          <p class="focus-text">O sube un Código QR desde tu dispositivo</p>
+        </div>
+
+        <input
+          type="file"
+          accept="image/*"
+          id="qr-upload"
+          style="display: none;"
+          (change)="subirImagenQR($event)"
+        >
+        <label for="qr-upload" class="btn-action btn-upload">
+          <i class="fas fa-upload"></i> Subir Código QR desde Imagen
+        </label>
+      </div>
+
+      <!-- Opciones del usuario -->
+      <div class="qr-options-area">
+        <h3>Opciones del Usuario</h3>
+
+        <div class="options-group">
+          <button class="btn-option" (click)="generarQRIdentificacion()">
+            <i class="fas fa-user-check"></i> Generar QR de Identificación
+          </button>
+          <p class="option-description">
+            Muestra tu código personal para que el personal de la biblioteca te identifique rápidamente.
+          </p>
+        </div>
+
+        <div class="options-group">
+          <button class="btn-option" (click)="abrirDevolucionManual()">
+            <i class="fas fa-book-medical"></i> Registrar Devolución Manual
+          </button>
+          <p class="option-description">
+            Si no puedes escanear, inicia una devolución manual con el ISBN del libro.
+          </p>
+        </div>
+
+        <div class="options-group">
+          <button class="btn-option" (click)="abrirAyuda()">
+            <i class="fas fa-question-circle"></i> Ayuda y Soporte
+          </button>
+          <p class="option-description">
+            ¿Tienes problemas para escanear? Contáctanos de inmediato.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Modal QR de Identificación -->
+<div class="modal-overlay" *ngIf="mostrarModalQR" (click)="cerrarModalQR()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="cerrarModalQR()">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <h3><i class="fas fa-qrcode"></i> Tu Código QR de Identificación</h3>
+
+    <div class="qr-display">
+      <div class="qr-code-placeholder">
+        <i class="fas fa-qrcode qr-icon-large"></i>
+        <p class="qr-data-text">{{ qrData }}</p>
+        <p class="qr-user-info" *ngIf="currentUser">
+          {{ currentUser?.nombre }} {{ currentUser?.apellido }}<br>
+          DNI: {{ currentUser?.dni }}
+        </p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <i class="fas fa-info-circle"></i>
+      <p>Presenta este código al personal de la biblioteca para identificación rápida</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Devolución Manual -->
+<div class="modal-overlay" *ngIf="mostrarModalDevolucion" (click)="cerrarModalDevolucion()">
+  <div class="modal-content large" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="cerrarModalDevolucion()">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <h3><i class="fas fa-book-medical"></i> Registrar Devolución Manual</h3>
+
+    <div class="devolucion-section">
+      <h4>Opción 1: Buscar por ISBN</h4>
+      <div class="isbn-search">
+        <input
+          type="text"
+          [(ngModel)]="isbnDevolucion"
+          placeholder="Ingresa el ISBN del libro (ej: 978-0307474728)"
+          class="isbn-input"
+        >
+        <button class="btn-search" (click)="buscarPrestamoISBN()">
+          <i class="fas fa-search"></i> Buscar
+        </button>
+      </div>
+    </div>
+
+    <div class="devolucion-section">
+      <h4>Opción 2: Seleccionar de tus préstamos activos</h4>
+      <div class="prestamos-list" *ngIf="prestamosUsuario.length > 0">
+        <div
+          class="prestamo-item"
+          *ngFor="let prestamo of prestamosUsuario"
+          [class.selected]="prestamoSeleccionado?.id === prestamo.id"
+          (click)="seleccionarPrestamo(prestamo)"
+        >
+          <img
+            [src]="prestamo.libro?.portada || 'assets/images/book-placeholder.png'"
+            [alt]="prestamo.libro?.titulo"
+            class="prestamo-cover"
+          >
+          <div class="prestamo-info">
+            <p class="prestamo-titulo">{{ prestamo.libro?.titulo }}</p>
+            <p class="prestamo-autor">{{ prestamo.libro?.autor }}</p>
+            <p class="prestamo-isbn">ISBN: {{ prestamo.libro?.isbn }}</p>
+            <p class="prestamo-fecha">Vence: {{ formatearFecha(prestamo.fechaDevolucion) }}</p>
+          </div>
+          <i class="fas fa-check-circle check-icon" *ngIf="prestamoSeleccionado?.id === prestamo.id"></i>
+        </div>
+      </div>
+
+      <div class="no-prestamos" *ngIf="prestamosUsuario.length === 0">
+        <i class="fas fa-inbox"></i>
+        <p>No tienes préstamos activos para devolver</p>
+      </div>
+    </div>
+
+    <div class="selected-info" *ngIf="prestamoSeleccionado">
+      <div class="info-box success">
+        <i class="fas fa-check-circle"></i>
+        <p><strong>Libro seleccionado:</strong> {{ prestamoSeleccionado?.libro?.titulo }}</p>
+        <p>¿Confirmas la devolución de este libro?</p>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="cerrarModalDevolucion()">
+        Cancelar
+      </button>
+      <button
+        class="btn-primary"
+        [disabled]="!prestamoSeleccionado"
+        (click)="confirmarDevolucion()"
+      >
+        <i class="fas fa-check"></i> Confirmar Devolución
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ayuda -->
+<div class="modal-overlay" *ngIf="mostrarModalAyuda" (click)="cerrarModalAyuda()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="cerrarModalAyuda()">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <h3><i class="fas fa-question-circle"></i> Ayuda y Soporte</h3>
+
+    <div class="ayuda-content">
+      <div class="ayuda-section">
+        <h4><i class="fas fa-camera"></i> ¿Cómo escanear un código QR?</h4>
+        <ol>
+          <li>Haz clic en "Subir Código QR desde Imagen"</li>
+          <li>Selecciona una imagen que contenga el código QR</li>
+          <li>El sistema procesará automáticamente el código</li>
+        </ol>
+      </div>
+
+      <div class="ayuda-section">
+        <h4><i class="fas fa-book"></i> ¿Dónde encuentro el código QR del libro?</h4>
+        <p>Los códigos QR se encuentran en la contraportada o primera página de cada libro de la biblioteca.</p>
+      </div>
+
+      <div class="ayuda-section">
+        <h4><i class="fas fa-phone"></i> Contacto</h4>
+        <p><strong>Teléfono:</strong> (01) 234-5678</p>
+        <p><strong>Email:</strong> soporte@smartlibrary.com</p>
+        <p><strong>Horario:</strong> Lun-Vie 8:00 AM - 8:00 PM</p>
+      </div>
+
+      <div class="info-box">
+        <i class="fas fa-lightbulb"></i>
+        <p><strong>Tip:</strong> Si tienes problemas técnicos, dirígete al mostrador de información para asistencia directa.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Resultado del Escaneo -->
+<div class="modal-overlay" *ngIf="mostrarResultado" (click)="cerrarResultado()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="cerrarResultado()">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <h3>
+      <i [class]="resultadoEscaneo?.tipo === 'libro' ? 'fas fa-book' :
+                   resultadoEscaneo?.tipo === 'usuario' ? 'fas fa-user' :
+                   'fas fa-exclamation-triangle'"></i>
+      Resultado del Escaneo
+    </h3>
+
+    <div class="resultado-content">
+      <p class="resultado-mensaje">{{ resultadoEscaneo?.mensaje }}</p>
+
+      <!-- Si es un libro -->
+      <div class="libro-resultado" *ngIf="resultadoEscaneo?.tipo === 'libro' && resultadoEscaneo?.datos">
+        <img
+          [src]="resultadoEscaneo?.datos?.portada || 'assets/images/book-placeholder.png'"
+          [alt]="resultadoEscaneo?.datos?.titulo"
+          class="libro-portada-resultado"
+        >
+        <div class="libro-datos">
+          <h4>{{ resultadoEscaneo?.datos?.titulo }}</h4>
+          <p><strong>Autor:</strong> {{ resultadoEscaneo?.datos?.autor }}</p>
+          <p><strong>ISBN:</strong> {{ resultadoEscaneo?.datos?.isbn }}</p>
+          <p><strong>Categoría:</strong> {{ resultadoEscaneo?.datos?.categoria }}</p>
+          <p [class]="resultadoEscaneo?.datos?.disponible ? 'disponible' : 'no-disponible'">
+            <i [class]="resultadoEscaneo?.datos?.disponible ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
+            {{ resultadoEscaneo?.datos?.disponible ? 'Disponible' : 'No disponible' }}
+          </p>
+        </div>
+
+<div class="resultado-actions" *ngIf="resultadoEscaneo && resultadoEscaneo.datos">
+  <button class="btn-secondary" (click)="verDetalleLibro(resultadoEscaneo.datos)">
+    <i class="fas fa-eye"></i> Ver Detalles
+  </button>
+  <button
+    class="btn-primary"
+    [disabled]="!resultadoEscaneo.datos.disponible"
+    (click)="reservarLibro(resultadoEscaneo.datos)"
+  >
+    <i class="fas fa-book"></i> Reservar
+  </button>
+</div>
+
+      <!-- Si es un usuario -->
+      <div class="usuario-resultado" *ngIf="resultadoEscaneo?.tipo === 'usuario'">
+        <div class="info-box success">
+          <i class="fas fa-check-circle"></i>
+          <p>Usuario validado correctamente</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

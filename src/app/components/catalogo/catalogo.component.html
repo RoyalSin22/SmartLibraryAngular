@@ -1,0 +1,143 @@
+
+<div class="main-content-wrapper">
+
+ <aside class="sidebar-info">
+    <!-- Tarjeta de Usuario -->
+    <div class="user-card">
+      <div class="user-card-header">
+        <div class="user-avatar-wrapper">
+          <img src="assets/images/avatar.jpg" alt="Avatar" class="user-avatar"
+               onerror="this.src='assets/images/paco_yunque.png'">
+          <span class="status-dot"></span>
+        </div>
+        <div class="user-info">
+          <h3 class="user-name">¡Hola, {{ currentUser?.nombre || 'Usuario' }}!</h3>
+          <span class="user-role">{{ currentUser?.tipo || 'Miembro' }}</span>
+        </div>
+      </div>
+
+      <div class="user-stats">
+        <div class="stat-box">
+          <div class="stat-icon">
+            <i class="fas fa-book-reader"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-number">{{ currentUser?.prestamosActivos || 0 }}</span>
+            <span class="stat-label">Préstamos</span>
+          </div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-icon">
+            <i class="fas fa-history"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-number">{{ currentUser?.historialPrestamos || 0 }}</span>
+            <span class="stat-label">Historial</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-quick-loan" [routerLink]="['/qr-scanner']">
+        <i class="fas fa-qrcode"></i>
+        <span>Préstamo Rápido</span>
+        <i class="fas fa-arrow-right btn-arrow"></i>
+      </button>
+    </div>
+
+    <!-- Tarjeta de Novedades -->
+    <div class="news-card">
+      <div class="news-header">
+        <i class="fas fa-bullhorn"></i>
+        <h3>Novedades</h3>
+      </div>
+
+      <div class="news-list">
+        <div *ngFor="let noticia of noticias; let i = index"
+             class="news-item"
+             [class.highlight]="noticia.highlight">
+          <div class="news-indicator" [ngClass]="noticia.tagClass"></div>
+          <div class="news-content">
+            <span *ngIf="noticia.tag" class="news-tag" [ngClass]="noticia.tagClass">
+              {{ noticia.tag }}
+            </span>
+            <h4 class="news-title">{{ noticia.titulo }}</h4>
+            <p class="news-date">
+              <i class="fas fa-calendar-alt"></i> {{ noticia.fecha }}
+            </p>
+            <p class="news-summary">{{ noticia.resumen }}</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-see-all">
+        Ver todas las novedades
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Catálogo -->
+  <section class="catalogo-section">
+
+    <h2 class="section-title">Explora la Colección</h2>
+
+    <!-- Búsqueda y Filtros -->
+    <div class="filters-bar">
+      <div class="search-input-group">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          placeholder="Buscar por título o autor..."
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearch()"
+          class="search-input"
+        >
+        <button *ngIf="searchTerm" (click)="searchTerm=''; onSearch()" class="clear-search-btn">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="category-filters">
+        <button
+          *ngFor="let categoria of categorias"
+          (click)="selectCategory(categoria)"
+          [ngClass]="{'active-category': selectedCategory === categoria}"
+          class="category-btn"
+        >
+          {{ categoria }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Grid de Libros -->
+    <div class="book-grid">
+      <div *ngIf="librosFiltrados.length === 0" class="no-results">
+        <i class="fas fa-box-open text-gray-400 text-6xl mb-4"></i>
+        <p class="text-xl text-gray-600">No se encontraron libros.</p>
+        <p class="text-sm text-gray-500">Intente con otro término o seleccione "Todos".</p>
+      </div>
+
+      <div *ngFor="let libro of librosFiltrados" class="book-card" (click)="verDetalle(libro.id)">
+        <img [src]="getPortada(libro)" [alt]="libro.titulo" class="book-cover">
+        <div class="book-info">
+          <h4 class="book-title">{{ libro.titulo }}</h4>
+          <p class="book-author">{{ libro.autor }}</p>
+          <div class="book-meta">
+            <span class="book-category">{{ libro.categoria }}</span>
+            <div class="book-rating">
+              <i *ngFor="let star of getStars(libro.rating)"
+                 class="fas fa-star"
+                 [ngClass]="{'text-yellow-500': star === 'full' || star === 'half', 'text-gray-300': star === 'empty'}">
+              </i>
+            </div>
+          </div>
+          <span class="book-status" [ngClass]="{'status-available': libro.disponible, 'status-loaned': !libro.disponible}">
+            {{ libro.disponible ? 'Disponible' : 'En Préstamo' }}
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+</div>
